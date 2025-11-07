@@ -1,0 +1,25 @@
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:postgres@localhost:5432/recipe-service"
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl"]
+}
+
+
+model Recipe {
+  id       String        @id @default(cuid())
+  name     String
+  items    RecipeItem[]
+  createdAt DateTime     @default(now())
+}
+
+model RecipeItem {
+  id         String  @id @default(cuid())
+  recipeId   String
+  ingredient String
+  qtyRequired Int
+  recipe     Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+}
